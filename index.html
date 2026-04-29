@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZeroQueue — Checkout Reimagined</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --navy:      #09111F;
+  --mid:       #101E35;
+  --card:      #131F38;
+  --border:    rgba(255,255,255,0.08);
+  --teal:      #00C2A8;
+  --teal-glow: rgba(0,194,168,0.18);
+  --teal-dim:  rgba(0,194,168,0.10);
+  --blue:      #1B7FD4;
+  --warn:      #F5A623;
+  --white:     #FFFFFF;
+  --offwhite:  #C8DCF0;
+  --muted:     #5E7A99;
+  --radius:    18px;
+  --fs-hero:   clamp(2.6rem, 5.5vw, 4.8rem);   /* smaller hero */
+  --fs-h2:     clamp(2.1rem, 3.4vw, 2.6rem);   /* slightly tighter */
+  --fs-h3:     clamp(1.35rem, 2vw, 1.7rem);    /* slightly bigger */
+  --fs-body:   clamp(1.05rem, 1.3vw, 1.2rem);  /* bigger body */
+}
+
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--navy);
+  color: var(--white);
+  overflow-x: hidden;
+  cursor: none;
+  font-size: var(--fs-body);
+  line-height: 1.7;
+}
+
+/* ── CURSOR ── */
+.cursor { position: fixed; top: 0; left: 0; z-index: 9999; pointer-events: none; }
+.cursor-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal); position: absolute; transform: translate(-50%,-50%); }
+.cursor-ring { width: 34px; height: 34px; border-radius: 50%; border: 1.5px solid rgba(0,194,168,0.45); position: absolute; transform: translate(-50%,-50%); transition: width .18s, height .18s, border-color .18s; }
+body:has(a:hover) .cursor-ring, body:has(button:hover) .cursor-ring { width: 50px; height: 50px; border-color: var(--teal); }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.2rem 4rem;
+  background: rgba(9,17,31,0.88);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.45rem; color: var(--white); text-decoration: none; letter-spacing: -0.5px; }
+.nav-logo span { color: var(--teal); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { color: var(--offwhite); text-decoration: none; font-size: 1rem; font-weight: 400; transition: color .2s; }
+.nav-links a:hover { color: var(--teal); }
+.nav-cta { background: var(--teal); color: var(--navy); border: none; padding: .7rem 1.6rem; border-radius: 40px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: .95rem; cursor: none; text-decoration: none; transition: background .2s, transform .15s; }
+.nav-cta:hover { background: #00dfc0; transform: scale(1.04); }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 0 3rem;
+  padding: 10rem 5rem 8rem;
+  position: relative; overflow: hidden;
+  align-items: center;
+}
+.hero-main {
+  display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  position: relative; z-index: 1;
+  grid-column: 1;
+}
+.hero-sidebar {
+  grid-column: 2;
+  display: flex; flex-direction: column; gap: 1.5rem;
+  position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp .8s .9s forwards;
+  border-left: 1px solid var(--border);
+  padding-left: 2.5rem;
+  align-self: center;
+}
+.sidebar-stat { display: flex; flex-direction: column; gap: .2rem; }
+.sidebar-stat .stat-val { font-size: 1.7rem; }
+.sidebar-stat .stat-label { font-size: .92rem; }
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 75% 35%, rgba(0,194,168,0.13) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 40% at 15% 75%, rgba(27,127,212,0.14) 0%, transparent 65%);
+}
+.hero-grid {
+  position: absolute; inset: 0; z-index: 0;
+  background-image: linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 30%, transparent 100%);
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: .55rem;
+  font-size: .9rem; font-weight: 500; letter-spacing: 1.5px; color: var(--teal);
+  background: var(--teal-dim); border: 1px solid rgba(0,194,168,0.3);
+  padding: .5rem 1.2rem; border-radius: 40px; margin-bottom: 2.2rem;
+  position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp .7s .1s forwards;
+}
+.hero-badge::before { content: '●'; font-size: .5rem; animation: blink 1.8s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+h1.hero-title {
+  font-family: 'Syne', sans-serif;
+  font-size: var(--fs-hero); font-weight: 800;
+  line-height: 1.0; letter-spacing: -2.0px;
+  max-width: 860px; position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp .8s .3s forwards;
+}
+h1.hero-title em { font-style: normal; color: var(--teal); display: block; }
+.hero-sub {
+  margin-top: 2rem;   font-size: clamp(1.2rem, 1.6vw, 1.4rem); font-weight: 300;
+  color: var(--offwhite); max-width: 580px; line-height: 1.65;
+  position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp .8s .5s forwards;
+}
+.hero-actions {
+  margin-top: 3rem; display: flex; gap: 1.1rem; align-items: center;
+  position: relative; z-index: 1;
+  opacity: 0; animation: fadeUp .8s .7s forwards;
+}
+.btn-primary {
+  background: var(--teal); color: var(--navy);
+  padding: 1.05rem 2.5rem; border-radius: 50px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem;
+  text-decoration: none; border: none; cursor: none;
+  box-shadow: 0 0 35px rgba(0,194,168,0.38);
+  transition: background .2s, transform .15s, box-shadow .2s;
+}
+.btn-primary:hover { background: #00dfc0; transform: translateY(-2px); box-shadow: 0 0 55px rgba(0,194,168,0.55); }
+.btn-ghost {
+  color: var(--white); border: 1.5px solid rgba(255,255,255,0.22);
+  padding: 1.05rem 2.5rem; border-radius: 50px;
+  font-family: 'Syne', sans-serif; font-weight: 600; font-size: 1.05rem;
+  text-decoration: none; cursor: none;
+  transition: border-color .2s, color .2s;
+}
+.btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+.stat-val { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; color: var(--teal); letter-spacing: -1px; display: block; }
+.stat-label { font-size: 1.1rem;line-height: 1.5; color: var(--muted); margin-top: .1rem; display: block; }
+
+/* ── SECTIONS ── */
+section { padding: 7rem 5rem; position: relative; }
+.section-eyebrow { font-size: .82rem; letter-spacing: 3px; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem; font-weight: 500; }
+h2.section-title { font-family: 'Syne', sans-serif; font-size: var(--fs-h2); font-weight: 800; letter-spacing: -1.5px; line-height: 1.1; max-width: 700px; }
+h2.section-title span { color: var(--teal); }
+.teal-rule { height: 1px; background: linear-gradient(90deg, transparent, var(--teal), transparent); }
+
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .7s cubic-bezier(.23,1,.32,1), transform .7s cubic-bezier(.23,1,.32,1); }
+.reveal.visible { opacity: 1; transform: none; }
+
+/* ── PROBLEM ── */
+#problem { background: var(--mid); }
+.problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem; margin-top: 4rem; }
+.problem-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 2.6rem; position: relative; overflow: hidden;
+  transition: border-color .3s;
+}
+.problem-card:hover { border-color: rgba(0,194,168,0.25); }
+.problem-icon { font-size: 3.5rem; margin-bottom: 1.3rem; display: block; text-align: center; }
+.problem-card h3 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 700; margin-bottom: .9rem; }
+.problem-card p { color: var(--offwhite); font-size: var(--fs-body); line-height: 1.75; }
+
+/* ── WHY US ── */
+#why { background: var(--navy); }
+.why-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start; margin-top: 4rem; }
+.why-left p { font-size: clamp(1rem, 1.3vw, 1.15rem); color: var(--offwhite); line-height: 1.8; margin-bottom: 1.5rem; }
+.quote-block { border-left: 3px solid var(--teal); padding-left: 1.5rem; margin: 2.5rem 0; }
+.quote-block blockquote { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-style: italic; color: var(--white); line-height: 1.6; font-weight: 300; }
+.quote-block cite { display: block; margin-top: .7rem; font-size: .95rem; color: var(--teal); font-style: normal; font-weight: 500; }
+.tested-note {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 1.3rem 1.6rem; margin-top: 1.5rem; font-size: var(--fs-body); color: var(--offwhite); line-height: 1.65;
+}
+.tested-note strong { color: var(--teal); }
+.why-right { display: flex; flex-direction: column; gap: 1.2rem; }
+.why-stat {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.8rem 2rem; display: flex; align-items: center; gap: 1.6rem;
+  transition: border-color .3s;
+}
+.why-stat:hover { border-color: rgba(0,194,168,0.3); }
+.why-stat-num { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--teal); letter-spacing: -1px; white-space: nowrap; }
+.why-stat-label { font-size: 1rem; color: var(--offwhite); line-height: 1.55; }
+
+/* ── PRODUCTS ── */
+#products { background: var(--mid); }
+.products-intro { max-width: 660px; margin-top: 1.2rem; font-size: clamp(1rem, 1.3vw, 1.15rem); color: var(--offwhite); line-height: 1.8; }
+.products-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3.5rem; }
+.product-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 2.8rem; display: flex; flex-direction: column; gap: 1rem;
+  position: relative; overflow: hidden;
+  transition: transform .3s, border-color .3s;
+}
+.product-card:hover { transform: translateY(-5px); border-color: rgba(0,194,168,0.35); }
+.product-card::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(0,194,168,0.07), transparent 65%);
+  opacity: 0; transition: opacity .3s;
+}
+.product-card:hover::before { opacity: 1; }
+.product-num { font-family: 'Syne', sans-serif; font-size: .78rem; letter-spacing: 3px; text-transform: uppercase; color: var(--teal); font-weight: 600; }
+.product-icon { font-size: 2.6rem; margin: .4rem 0; }
+.product-card h3 { font-family: 'Syne', sans-serif; font-size: 1.5rem; font-weight: 800; line-height: 1.2; }
+.product-card p { font-size: var(--fs-body); color: var(--offwhite); line-height: 1.75; flex: 1; }
+.product-aside { font-size: 1.02rem; color: var(--muted); line-height: 1.6; }
+.product-tags { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .5rem; }
+.product-tag {
+  font-size: .8rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 600;
+  padding: .3rem .8rem; border-radius: 20px;
+  background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(0,194,168,0.22);
+}
+
+/* ── HOW IT WORKS ── */
+#how { background: var(--navy); }
+.steps-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1rem; margin-top: 4rem; position: relative; }
+.steps-row::before {
+  content: ''; position: absolute;
+  top: 2.6rem; left: 10%; right: 10%; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--teal), transparent);
+}
+.step { text-align: center; padding: 0 .5rem; position: relative; z-index: 1; }
+.step-num {
+  width: 5.2rem; height: 5.2rem; border-radius: 50%; margin: 0 auto 1.4rem;
+  background: var(--card); border: 2px solid var(--teal);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif; font-size: 1.6rem; font-weight: 800; color: var(--teal);
+  box-shadow: 0 0 22px rgba(0,194,168,0.22);
+  transition: transform .3s, box-shadow .3s;
+}
+.step:hover .step-num { transform: scale(1.1); box-shadow: 0 0 38px rgba(0,194,168,0.42); }
+.step h3 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem; margin-bottom: .6rem; }
+.step p { font-size: 1.05rem; color: var(--muted); line-height: 1.65; }
+
+/* ── PARTNERS ── */
+#partners { background: var(--mid); }
+.partner-cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: 5rem; align-items: start; margin-top: 4rem; }
+.partner-left p { font-size: clamp(1rem, 1.3vw, 1.15rem); color: var(--offwhite); line-height: 1.8; margin-bottom: 1.2rem; margin-top: 1.5rem; }
+.partner-left .muted-note { font-size: .95rem; color: var(--muted); }
+.partner-benefits { display: flex; flex-direction: column; gap: 1.1rem; }
+.partner-benefit {
+  display: flex; gap: 1.1rem; align-items: flex-start;
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem 1.6rem;
+  transition: border-color .3s;
+}
+.partner-benefit:hover { border-color: rgba(0,194,168,0.3); }
+.partner-benefit-icon { font-size: 1.5rem; flex-shrink: 0; margin-top: .1rem; }
+.partner-benefit div strong { font-family: 'Syne', sans-serif; font-size: 1.05rem; display: block; margin-bottom: .3rem; }
+.partner-benefit div p { font-size: .95rem; color: var(--muted); line-height: 1.55; margin: 0; }
+
+/* ── PRICING ── */
+#pricing { background: var(--navy); }
+.pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 4rem; }
+.pricing-card {
+  background: var(--card); border: 1.5px solid var(--border); border-radius: var(--radius);
+  padding: 2.8rem; position: relative; overflow: hidden;
+  transition: transform .3s, border-color .3s;
+}
+.pricing-card:hover { transform: translateY(-4px); border-color: rgba(0,194,168,0.3); }
+.pricing-card.featured { border-color: var(--teal); background: rgba(0,194,168,0.05); }
+.pricing-card.featured::after {
+  content: 'MOST POPULAR'; position: absolute; top: 1.4rem; right: 1.4rem;
+  font-size: .7rem; letter-spacing: 2px; font-weight: 700;
+  background: var(--teal); color: var(--navy); padding: .32rem .9rem; border-radius: 20px;
+}
+.pricing-tier { font-size: .8rem; letter-spacing: 2.5px; text-transform: uppercase; color: var(--teal); font-weight: 600; margin-bottom: .5rem; }
+.pricing-name { font-family: 'Syne', sans-serif; font-size: 1.75rem; font-weight: 800; margin-bottom: .5rem; }
+.pricing-desc { font-size: 1rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.6; }
+.pricing-price { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2.9rem; margin-bottom: .3rem; }
+.pricing-price sup { font-size: 1.3rem; vertical-align: super; }
+.pricing-price sub { font-size: .95rem; font-weight: 400; color: var(--muted); }
+.pricing-note { font-size: .88rem; color: var(--muted); margin-bottom: 2rem; }
+.pricing-features { list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.4rem; }
+.pricing-features li { font-size: 1rem; color: var(--offwhite); display: flex; gap: .75rem; align-items: flex-start; line-height: 1.55; }
+.pricing-features li::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; }
+.pricing-btn {
+  display: block; text-align: center; padding: 1.05rem; border-radius: 40px;
+  font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1rem;
+  text-decoration: none; cursor: none; transition: all .2s; border: none;
+}
+.pricing-btn-ghost { border: 1.5px solid rgba(255,255,255,0.2); color: var(--white); background: transparent; }
+.pricing-btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+.pricing-btn-filled { background: var(--teal); color: var(--navy); box-shadow: 0 0 28px rgba(0,194,168,0.32); }
+.pricing-btn-filled:hover { background: #00dfc0; transform: translateY(-1px); }
+
+/* ── CONTACT ── */
+#contact { background: var(--mid); }
+.contact-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; margin-top: 4rem; align-items: start; }
+.contact-left h3 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 1.2rem; }
+.contact-left p { font-size: var(--fs-body); color: var(--offwhite); line-height: 1.8; margin-bottom: 2rem; }
+.contact-detail { display: flex; gap: 1rem; align-items: center; margin-bottom: 1.3rem; }
+.contact-detail-icon {
+  width: 2.7rem; height: 2.7rem; border-radius: 10px; flex-shrink: 0;
+  background: var(--teal-dim); border: 1px solid rgba(0,194,168,0.22);
+  display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+}
+.contact-detail span { font-size: var(--fs-body); color: var(--offwhite); }
+.contact-form { display: flex; flex-direction: column; gap: 1.3rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.form-group { display: flex; flex-direction: column; gap: .45rem; }
+.form-group label { font-size: .84rem; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.form-group input, .form-group select, .form-group textarea {
+  background: rgba(255,255,255,0.04); border: 1.5px solid var(--border);
+  border-radius: 10px; padding: 1rem 1.1rem;
+  color: var(--white); font-family: 'DM Sans', sans-serif; font-size: 1rem;
+  outline: none; transition: border-color .2s; appearance: none;
+}
+.form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.2); }
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--teal); background: rgba(0,194,168,0.04); }
+.form-group textarea { resize: vertical; min-height: 130px; }
+.form-group select option { background: var(--card); }
+.form-submit {
+  background: var(--teal); color: var(--navy); border: none; padding: 1.15rem;
+  border-radius: 40px; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.05rem;
+  cursor: none; transition: background .2s, transform .15s;
+  box-shadow: 0 0 32px rgba(0,194,168,0.32);
+}
+.form-submit:hover { background: #00dfc0; transform: translateY(-2px); }
+.form-success {
+  display: none; background: rgba(0,194,168,0.1); border: 1.5px solid var(--teal);
+  border-radius: var(--radius); padding: 1.6rem; text-align: center;
+  color: var(--teal); font-family: 'Syne', sans-serif; font-weight: 600; font-size: 1.05rem;
+}
+
+/* ── FOOTER ── */
+footer {
+  background: #060D18; padding: 2.8rem 5rem;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--border);
+}
+.footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; }
+.footer-logo span { color: var(--teal); }
+.footer-copy { font-size: .9rem; color: var(--muted); }
+.footer-links { display: flex; gap: 2rem; }
+.footer-links a { font-size: .9rem; color: var(--muted); text-decoration: none; transition: color .2s; }
+.footer-links a:hover { color: var(--teal); }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor">
+  <div class="cursor-ring" id="cursorRing"></div>
+  <div class="cursor-dot" id="cursorDot"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">Zero<span>Queue</span></a>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#products">Products</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#partners">Partners</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Request Demo</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-main">
+  <p class="hero-badge">Tested at Kornhauser's Club &nbsp;·&nbsp; Software-First AI Checkout</p>
+
+  <h1 class="hero-title">
+   Your customers<br>shouldn’t have to wait.
+  <em>So we’re fixing it.</em>
+  </h1>
+
+  <p class="hero-sub">ZeroQueue is a suite of AI software products that reduces checkout friction — starting with a simple app-based scanning experience and evolving toward seamless, low-interaction checkout. No long lines. No confusion. A smoother way to pay.</p>
+
+  <div class="hero-actions">
+    <a href="#products" class="btn-primary">See Our Products →</a>
+    <a href="#how" class="btn-ghost">How It Works</a>
+  </div>
+
+  </div>
+  </div>
+
+  <div class="hero-sidebar">
+    <div class="sidebar-stat">
+      <span class="stat-val">~4 min</span>
+      <span class="stat-label">Checkout time eliminated per customer</span>
+    </div>
+    <div class="sidebar-stat">
+      <span class="stat-val">↓ 70%</span>
+      <span class="stat-label">Reduction in checkout labor cost</span>
+    </div>
+    <div class="sidebar-stat">
+      <span class="stat-val">∞</span>
+      <span class="stat-label">Simultaneous checkouts — no bottleneck</span>
+    </div>
+    <div class="sidebar-stat">
+      <span class="stat-val">↑ Visits</span>
+      <span class="stat-label">Customers choose stores with zero wait times</span>
+    </div>
+  </div>
+</section>
+
+<div class="teal-rule"></div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <p class="section-eyebrow reveal">The Problem</p>
+  <h2 class="section-title reveal">Checkout is broken.<br><span>Everyone knows it.</span></h2>
+
+  <div class="problem-grid reveal">
+    <div class="problem-card">
+      <span class="problem-icon">😤</span>
+      <h3>Self-Checkout Is Widely Hated</h3>
+      <p>Customers are forced to do the work themselves — often without knowing how — on systems they find confusing and impersonal. The frustration is real and measurable. People actively avoid stores because of it.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">⏳</span>
+      <h3>Wait Times Drive People Away</h3>
+      <p>Long lines push customers toward online shopping, delivery apps, and eating out. Every minute spent waiting at checkout is a reason not to come back — and a reason to tell others not to, either.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">💸</span>
+      <h3>Cashiers Are Expensive and Slow</h3>
+      <p>Human cashiers are the single largest labor cost in retail. They create bottlenecks at peak hours and set a hard ceiling on how many customers a store can serve simultaneously.</p>
+    </div>
+    <div class="problem-card">
+      <span class="problem-icon">🚫</span>
+      <h3>Existing Alternatives Fall Short</h3>
+      <p>RFID tags are expensive and impractical at grocery scale. Amazon Go requires massive proprietary infrastructure most stores can't afford. Existing systems treat checkout as an afterthought — we built a company around solving it.</p>
+    </div>
+  </div>
+</section>
+
+<div class="teal-rule"></div>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="why-cols">
+    <div class="why-left reveal">
+      <p class="section-eyebrow">Our Philosophy</p>
+      <h2 class="section-title" style="margin-bottom:1.5rem;">Software first.<br><span>Human always.</span></h2>
+      <p>We specialize in the software layer — the computer vision, the risk AI, the membership system — and partner with best-in-class hardware companies to deliver a complete solution without overextending ourselves.</p>
+      <p>That focus lets us build better software than any vertically integrated competitor. And cross-promotion with our hardware partners means more reach for everyone, at no extra cost.</p>
+      <p>As Chunka Mui's Laws of Zero remind us: the cost of compute is approaching zero. The economics of AI-powered checkout only improve over time. We're building for where the world is going.</p>
+
+      <div class="quote-block">
+        <blockquote>"AI done right should make you MORE human, not less."</blockquote>
+        <cite>— Internal product principle</cite>
+      </div>
+
+      <div class="tested-note">
+        🧪 <strong>Tested at Kornhauser's Club</strong> — we didn't theorize about this. We put our system in a real store, with real customers, and measured what happened.
+      </div>
+    </div>
+
+    <div class="why-right reveal">
+      <div class="why-stat">
+        <span class="why-stat-num">~4 min</span>
+        <span class="why-stat-label">saved per customer per shopping trip with ZeroQueue checkout</span>
+      </div>
+      <div class="why-stat">
+        <span class="why-stat-num">↓ 70%</span>
+        <span class="why-stat-label">reduction in checkout-related labor cost for participating stores</span>
+      </div>
+      <div class="why-stat">
+        <span class="why-stat-num">↑ Traffic</span>
+        <span class="why-stat-label">customers actively choose stores with faster checkout over nearby competitors</span>
+      </div>
+      <div class="why-stat">
+        <span class="why-stat-num">$0 →</span>
+        <span class="why-stat-label">cost of compute trending toward zero — our ROI for stores improves every year</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="teal-rule"></div>
+
+<!-- PRODUCTS -->
+<section id="products">
+  <p class="section-eyebrow reveal">Our Products</p>
+  <h2 class="section-title reveal">Three products.<br><span>One seamless system.</span></h2>
+  <p class="products-intro reveal">Most stores begin with our app-based system and expand into computer vision and automation over time — each product is designed to build on the last. Stores can adopt any combination — start with one product, add more as you grow. Each module is independent, integrates with your existing setup, and pairs with our hardware partners for best-in-class performance.</p>
+
+  <div class="products-grid reveal">
+
+    <div class="product-card">
+      <span class="product-num">Product 01</span>
+      <span class="product-icon">📷</span>
+      <h3>Computer Vision Checkout</h3>
+      <p>AI-powered camera software that tracks every item placed in a cart in real time — at the shelves, in the aisles, and at the exit. Members can be recognized on entry and supported throughout their shopping session. When paired with our app and camera partners, stores can progressively reduce manual scanning and move toward low-interaction checkout.</p>
+      <p class="product-aside">Works with most modern cameras. We recommend our hardware partners for best accuracy. Stores can also choose camera-only entry/exit coverage without full aisle deployment. We partner with select camera manufacturers to offer pre-integrated systems, while still supporting integration with existing in-store hardware.</p>
+      <div class="product-tags">
+        <span class="product-tag">In-Aisle CV</span>
+        <span class="product-tag">Entry / Exit AI</span>
+        <span class="product-tag">Auto Charge</span>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <span class="product-num">Product 02</span>
+      <span class="product-icon">📱</span>
+      <h3>Membership & App System</h3>
+      <p>The customer-facing membership platform. Shoppers register, link a payment method, and use the app to scan items as they shop. The CV system ties their identity to their session — multiple profiles per account are supported and recognized automatically.This is the foundation of the ZeroQueue system — enabling app-based item scanning today while preparing stores for deeper automation over time.</p>
+      <p class="product-aside">Optional hardware add-on: entrance kiosk terminals for customers without smartphones, available through our hardware partners.</p>
+      <div class="product-tags">
+        <span class="product-tag">Mobile App</span>
+        <span class="product-tag">Multi-Profile</span>
+        <span class="product-tag">Card on File</span>
+      </div>
+    </div>
+
+    <div class="product-card">
+      <span class="product-num">Product 03</span>
+      <span class="product-icon">🛡️</span>
+      <h3>Risk & Theft Mitigation AI</h3>
+      <p>Intelligent alert dampening that protects loyal customers from false accusations — which can destroy a business far faster than any theft. The AI cross-references membership history before escalating anything to staff.</p>
+      <p class="product-aside">Unregistered exits receive full scrutiny. Known members are protected. Pursue real theft confidently, without risking the customer relationships that are your biggest asset.</p>
+      <div class="product-tags">
+        <span class="product-tag">Alert Dampening</span>
+        <span class="product-tag">Trust Scoring</span>
+        <span class="product-tag">Loss Prevention</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="teal-rule"></div>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <p class="section-eyebrow reveal">How It Works</p>
+  <h2 class="section-title reveal">Five steps.<br><span>Zero friction.</span></h2>
+
+  <div class="steps-row reveal">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>Enter & Check In</h3>
+      <p>Open the app or tap the entrance kiosk. Membership and payment verified instantly — you're ready to shop.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>Shop Freely</h3>
+      <p>Grab what you need and scan items in the app as you shop. The process is fast, familiar, and already reduces checkout friction.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>AI Supports Your Cart</h3>
+      <p>In-aisle and exit cameras identify every item in real time. The risk AI monitors for genuine anomalies only.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h3>Quick Checkout</h3>
+      <p>Our system can integrate with cameras to assist tracking and reduce errors — building toward more automated checkout over time.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <h3>Receipt on Your Phone</h3>
+      <p>Itemized receipt hits the app instantly. Review, dispute, or reorder with one tap. Completely done.</p>
+    </div>
+  </div>
+</section>
+
+<div class="teal-rule"></div>
+
+<!-- PARTNERS -->
+<section id="partners">
+  <div class="partner-cols">
+    <div class="partner-left reveal">
+      <p class="section-eyebrow">Hardware Partnerships</p>
+      <h2 class="section-title">We write the software.<br><span>We pick the best hardware.</span></h2>
+      <p>We don’t manufacture cameras — we partner with leading hardware companies to deliver pre-integrated solutions, while still supporting stores that want to use their existing systems.</p>
+      <p>Every partnership is built on mutual cross-promotion: our partners promote ZeroQueue to their retail customers, and we recommend our partners to every store we onboard. No extra marketing spend — everyone grows together.</p>
+      <p class="muted-note">We publish minimum camera spec recommendations for every product tier, so any store understands exactly what hardware their use case requires — and our partners can fulfill it. Our software is designed to integrate with a wide range of camera setups, giving stores flexibility while still offering optimized performance through our preferred partners.</p>
+    </div>
+    <div class="partner-benefits reveal">
+      <div class="partner-benefit">
+        <span class="partner-benefit-icon">🎯</span>
+        <div>
+          <strong>Specialization = Better Software</strong>
+          <p>Not building hardware ourselves means we build far better AI than any generalist competitor trying to do both.</p>
+        </div>
+      </div>
+      <div class="partner-benefit">
+        <span class="partner-benefit-icon">📣</span>
+        <div>
+          <strong>Built-In Cross-Promotion</strong>
+          <p>Hardware partners promote ZeroQueue to their retail clients. We grow each other's customer base at no extra cost.</p>
+        </div>
+      </div>
+      <div class="partner-benefit">
+        <span class="partner-benefit-icon">🔧</span>
+        <div>
+          <strong>Works With Existing Hardware</strong>
+          <p>Already have cameras installed? Our software runs on most modern systems. Upgrade only if your use case demands it.</p>
+        </div>
+      </div>
+      <div class="partner-benefit">
+        <span class="partner-benefit-icon">📋</span>
+        <div>
+          <strong>Published Camera Specs</strong>
+          <p>Transparent spec requirements for every product tier — stores know exactly what they need before spending a dollar on hardware.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="teal-rule"></div>
+
+<!-- PRICING -->
+<section id="pricing">
+  <p class="section-eyebrow reveal">Pricing</p>
+  <h2 class="section-title reveal">Modular pricing.<br><span>Pay for what you use.</span></h2>
+
+  <div class="pricing-grid reveal">
+    <div class="pricing-card">
+      <p class="pricing-tier">STARTER</p>
+      <h3 class="pricing-name">App + Membership</h3>
+      <p class="pricing-desc">The membership and app system standalone. Get customers enrolled and payments on file — the natural first step before adding CV checkout.</p>
+      <p class="pricing-price"><sup>$</sup>499<sub>/mo</sub></p>
+      <p class="pricing-note">Per store location</p>
+      <ul class="pricing-features">
+        <li>Full membership app (iOS + Android)</li>
+        <li>Payment on file + check-in flow</li>
+        <li>Multi-profile support per account</li>
+        <li>Entrance kiosk integration (hardware separate)</li>
+        <li>Customer analytics dashboard</li>
+        <li>Email support</li>
+      </ul>
+      <a href="#contact" class="pricing-btn pricing-btn-ghost">Get Started</a>
+    </div>
+
+    <div class="pricing-card featured">
+      <p class="pricing-tier">GROWTH</p>
+      <h3 class="pricing-name">CV Checkout + App</h3>
+      <p class="pricing-desc">The full walk-out checkout experience. Computer vision at entry, aisles, and exit — combined with the membership app. Works with existing cameras or our partner hardware.</p>
+      <p class="pricing-price"><sup>$</sup>1,999<sub>/mo</sub></p>
+      <p class="pricing-note">Per store · hardware not included</p>
+      <ul class="pricing-features">
+        <li>Everything in Starter</li>
+        <li>In-aisle + exit CV checkout software</li>
+        <li>Real-time cart tracking AI</li>
+        <li>Auto-charge on exit</li>
+        <li>Partner camera spec recommendations</li>
+        <li>Priority support + onboarding</li>
+      </ul>
+      <a href="#contact" class="pricing-btn pricing-btn-filled">Request Demo</a>
+    </div>
+
+    <div class="pricing-card">
+      <p class="pricing-tier">ENTERPRISE</p>
+      <h3 class="pricing-name">Full Suite + Risk AI</h3>
+      <p class="pricing-desc">Every product. CV checkout, membership app, and the full risk mitigation and theft AI layer. Built for multi-location chains and high-traffic stores.</p>
+      <p class="pricing-price" style="font-size:2rem; padding-top:.5rem;">Custom</p>
+      <p class="pricing-note">Volume discounts across all locations</p>
+      <ul class="pricing-features">
+        <li>Everything in Growth</li>
+        <li>Risk & theft mitigation AI</li>
+        <li>Alert dampening for members</li>
+        <li>Trust scoring across locations</li>
+        <li>Dedicated account manager</li>
+        <li>SLA-backed uptime guarantee</li>
+        <li>Custom hardware partner agreements</li>
+      </ul>
+      <a href="#contact" class="pricing-btn pricing-btn-ghost">Talk to Sales</a>
+    </div>
+  </div>
+</section>
+
+<div class="teal-rule"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <p class="section-eyebrow reveal">Get in Touch</p>
+  <h2 class="section-title reveal">Ready to eliminate<br><span>your checkout line?</span></h2>
+
+  <div class="contact-wrap reveal">
+    <div class="contact-left">
+      <h3>Let's talk about your store.</h3>
+      <p>Whether you're a single-location grocer or a regional chain, we'll walk you through exactly how ZeroQueue fits your operation — what hardware you need, what it costs, and what the ROI looks like for your traffic volume.</p>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📍</div>
+        <span>Princeton, NJ — serving retailers nationwide</span>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">📧</div>
+        <span>hello@zeroqueue.io</span>
+      </div>
+      <div class="contact-detail">
+        <div class="contact-detail-icon">🧪</div>
+        <span>Real-world tested at Kornhauser's Club</span>
+      </div>
+    </div>
+
+    <div>
+      <form class="contact-form" id="contactForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>First Name</label>
+            <input type="text" placeholder="Jane">
+          </div>
+          <div class="form-group">
+            <label>Last Name</label>
+            <input type="text" placeholder="Smith">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Work Email</label>
+          <input type="email" placeholder="jane@yourstore.com">
+        </div>
+        <div class="form-group">
+          <label>Store / Company</label>
+          <input type="text" placeholder="Smith's Grocery">
+        </div>
+        <div class="form-group">
+          <label>Number of Locations</label>
+          <select>
+            <option value="">Select...</option>
+            <option>1 location</option>
+            <option>2–5 locations</option>
+            <option>6–20 locations</option>
+            <option>20+ locations</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Interested In</label>
+          <select>
+            <option value="">Select a product...</option>
+            <option>App + Membership only</option>
+            <option>CV Checkout + App</option>
+            <option>Full Suite (all three products)</option>
+            <option>Not sure — want to learn more</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Anything else?</label>
+          <textarea placeholder="Current checkout setup, pain points, questions..."></textarea>
+        </div>
+        <button type="submit" class="form-submit">Send Message →</button>
+        <div class="form-success" id="formSuccess">✓ &nbsp; Thanks! We'll be in touch within one business day.</div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Zero<span>Queue</span></div>
+  <p class="footer-copy">© 2025 ZeroQueue Inc. All rights reserved.</p>
+  <div class="footer-links">
+    <a href="#products">Products</a>
+    <a href="#how">How It Works</a>
+    <a href="#partners">Partners</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact">Contact</a>
+  </div>
+</footer>
+
+<script>
+  // Cursor
+  const dot = document.getElementById('cursorDot');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  (function animCursor() {
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+    rx += (mx - rx) * 0.13; ry += (my - ry) * 0.13;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animCursor);
+  })();
+
+  // Scroll reveal with stagger
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  document.querySelectorAll('.products-grid, .pricing-grid, .problem-grid, .steps-row, .why-right, .partner-benefits').forEach(grid => {
+    grid.querySelectorAll(':scope > *').forEach((child, i) => {
+      child.style.transitionDelay = (i * 0.09) + 's';
+    });
+  });
+
+  // Nav scroll
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.style.background = window.scrollY > 40 ? 'rgba(9,17,31,0.97)' : 'rgba(9,17,31,0.88)';
+  });
+
+  // Form submit
+  document.getElementById('contactForm').addEventListener('submit', e => {
+    e.preventDefault();
+    document.getElementById('formSuccess').style.display = 'block';
+    e.target.querySelectorAll('input,select,textarea,button').forEach(el => el.disabled = true);
+  });
+</script>
+</body>
+</html>
