@@ -23,9 +23,9 @@
   --offwhite:  #C8DCF0;
   --muted:     #ffffff;
   --radius:    18px;
-  --fs-hero:   clamp(2.6rem, 5.5vw, 4.8rem);   /* smaller hero */
-  --fs-h2:     clamp(2.1rem, 3.4vw, 2.6rem);   /* slightly tighter */
-  --fs-h3:     clamp(1.35rem, 2vw, 1.7rem);    /* slightly bigger */
+  --fs-hero:   clamp(2.6rem, 5.5vw, 4.8rem);
+  --fs-h2:     clamp(2.1rem, 3.4vw, 2.6rem);
+  --fs-h3:     clamp(1.35rem, 2vw, 1.7rem);
   --fs-body:   clamp(1.25rem, 1.55vw, 1.42rem);
 }
 
@@ -122,7 +122,7 @@ h1.hero-title {
 }
 h1.hero-title em { font-style: normal; color: var(--teal); display: block; }
 .hero-sub {
-  margin-top: 2rem;   font-size: clamp(1.2rem, 1.6vw, 1.4rem); font-weight: 300;
+  margin-top: 2rem; font-size: clamp(1.2rem, 1.6vw, 1.4rem); font-weight: 300;
   color: var(--offwhite); max-width: 580px; line-height: 1.65;
   position: relative; z-index: 1;
   opacity: 0; animation: fadeUp .8s .5s forwards;
@@ -151,7 +151,7 @@ h1.hero-title em { font-style: normal; color: var(--teal); display: block; }
 .btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
 
 .stat-val { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.8rem; color: var(--teal); letter-spacing: -1px; display: block; }
-.stat-label { font-size: 1.22rem;line-height: 1.5; color: var(--muted); margin-top: .1rem; display: block; }
+.stat-label { font-size: 1.22rem; line-height: 1.5; color: var(--muted); margin-top: .1rem; display: block; }
 
 /* ── SECTIONS ── */
 section { padding: 7rem 5rem; position: relative; }
@@ -287,7 +287,7 @@ h2.section-title span { color: var(--teal); }
 .pricing-price sub { font-size: 1.08rem; font-weight: 400; color: var(--muted); }
 .pricing-note { font-size: 1.12rem; color: var(--muted); margin-bottom: 2rem; }
 .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2.4rem; }
-.pricing-features li { font-size: 1.12rem; color: var(--offwhite); display: flex; gap: .75rem; align-items: flex-start; line-height: 1.55; }
+.pricing-features li { font-size: 1.25rem; color: var(--offwhite); display: flex; gap: .75rem; align-items: flex-start; line-height: 1.55; }
 .pricing-features li::before { content: '✓'; color: var(--teal); font-weight: 700; flex-shrink: 0; }
 .pricing-btn {
   display: block; text-align: center; padding: 1.05rem; border-radius: 40px;
@@ -367,7 +367,6 @@ footer {
   </div>
 </div>
 
-<!-- NAV -->
 <nav>
   <a href="#hero" class="nav-logo">Zero<span>Queue</span></a>
   <ul class="nav-links">
@@ -381,41 +380,31 @@ footer {
   <a href="#contact" class="nav-cta">Request Demo</a>
 </nav>
 
-<!-- HERO -->
 <section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
 
   <div class="hero-main">
-  <p class="hero-badge">Tested at Kornhauser's Club &nbsp;·&nbsp; Software-First AI Checkout</p>
-
-  <h1 class="hero-title">
-   Your customers<br>shouldn’t have to wait.
-  <em>So we’re fixing it.</em>
-  </h1>
-
-  <p class="hero-sub">ZeroQueue is a suite of AI software products that reduces checkout friction — starting with a simple app-based scanning experience and evolving toward seamless, low-interaction checkout. No long lines. No confusion. A smoother way to pay.</p>
-
-  <div class="hero-actions">
-    <a href="#products" class="btn-primary">See Our Products →</a>
-    <a href="#how" class="btn-ghost">How It Works</a>
-  </div>
-
-  </div>
+    <p class="hero-badge">Tested at Kornhauser's Club &nbsp;·&nbsp; Software-First AI Checkout</p>
+    <h1 class="hero-title">
+      Your customers<br>shouldn't have to wait.
+      <em>So we're fixing it.</em>
+    </h1>
+    <p class="hero-sub">ZeroQueue is a suite of AI software products that reduces checkout friction — starting with a simple app-based scanning experience and evolving toward seamless, low-interaction checkout. No long lines. No confusion. A smoother way to pay.</p>
+    <div class="hero-actions">
+      <a href="#products" class="btn-primary">See Our Products →</a>
+      <a href="#how" class="btn-ghost">How It Works</a>
+    </div>
   </div>
 
   <div class="hero-sidebar">
     <div class="sidebar-stat">
-      <span class="stat-val">~4 min</span>
-      <span class="stat-label">Checkout time eliminated per customer</span>
+      <span class="stat-val">↓ 99%</span>
+      <span class="stat-label">Checkout time reduction with the full package — in real-world testing</span>
     </div>
     <div class="sidebar-stat">
-      <span class="stat-val">↓ 70%</span>
-      <span class="stat-label">Reduction in checkout labor cost</span>
-    </div>
-    <div class="sidebar-stat">
-      <span class="stat-val">∞</span>
-      <span class="stat-label">Simultaneous checkouts — no bottleneck</span>
+      <span class="stat-val">$200K+</span>
+      <span class="stat-label">Annual savings for a small grocery store — scales exponentially with size</span>
     </div>
     <div class="sidebar-stat">
       <span class="stat-val">↑ Visits</span>
@@ -426,11 +415,9 @@ footer {
 
 <div class="teal-rule"></div>
 
-<!-- PROBLEM -->
 <section id="problem">
   <p class="section-eyebrow reveal">The Problem</p>
   <h2 class="section-title reveal">Checkout is broken.<br><span>Everyone knows it.</span></h2>
-
   <div class="problem-grid reveal">
     <div class="problem-card">
       <span class="problem-icon">😤</span>
@@ -457,7 +444,6 @@ footer {
 
 <div class="teal-rule"></div>
 
-<!-- WHY US -->
 <section id="why">
   <div class="why-cols">
     <div class="why-left reveal">
@@ -466,25 +452,22 @@ footer {
       <p>We specialize in the software layer — the computer vision, the risk AI, the membership system — and partner with best-in-class hardware companies to deliver a complete solution without overextending ourselves.</p>
       <p>That focus lets us build better software than any vertically integrated competitor. And cross-promotion with our hardware partners means more reach for everyone, at no extra cost.</p>
       <p>As Chunka Mui's Laws of Zero remind us: the cost of compute is approaching zero. The economics of AI-powered checkout only improve over time. We're building for where the world is going.</p>
-
       <div class="quote-block">
-        <blockquote>"AI done right should make you MORE human, not less."</blockquote>
-        <cite>— Internal product principle</cite>
+        <blockquote>"AI done right should make you more human, not less."</blockquote>
+        <cite>— Laura Kornhauser, Kornhauser's Club</cite>
       </div>
-
       <div class="tested-note">
         🧪 <strong>Tested at Kornhauser's Club</strong> — we didn't theorize about this. We put our system in a real store, with real customers, and measured what happened.
       </div>
     </div>
-
     <div class="why-right reveal">
       <div class="why-stat">
-        <span class="why-stat-num">~4 min</span>
-        <span class="why-stat-label">saved per customer per shopping trip with ZeroQueue checkout</span>
+        <span class="why-stat-num">↓ 99%</span>
+        <span class="why-stat-label">checkout time reduction with the full package — measured in real-world testing at Kornhauser's Club</span>
       </div>
       <div class="why-stat">
-        <span class="why-stat-num">↓ 70%</span>
-        <span class="why-stat-label">reduction in checkout-related labor cost for participating stores</span>
+        <span class="why-stat-num">$200K+</span>
+        <span class="why-stat-label">in annual savings for a small grocery store — scales exponentially as store size and traffic grow</span>
       </div>
       <div class="why-stat">
         <span class="why-stat-num">↑ Traffic</span>
@@ -500,103 +483,191 @@ footer {
 
 <div class="teal-rule"></div>
 
-<!-- PRODUCTS -->
+<section id="numbers" style="background: var(--navy); padding: 7rem 5rem;">
+  <p class="section-eyebrow reveal" style="text-align:center;">The Numbers</p>
+  <h2 class="section-title reveal" style="text-align:center; max-width:100%; margin-bottom:4rem;">Real results.<br><span>Real math.</span></h2>
+
+  <div class="numbers-grid reveal" style="display:grid; grid-template-columns:1fr 1fr; gap:2.5rem; max-width:1400px; margin:0 auto;">
+
+    <!-- TIME SAVED -->
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:3rem; position:relative; overflow:hidden;">
+      <div style="position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,194,168,0.09), transparent 70%); pointer-events:none;"></div>
+      <p style="font-size:1.1rem; letter-spacing:3px; text-transform:uppercase; color:var(--teal); font-weight:600; margin-bottom:.8rem;">Time Savings</p>
+      <p style="font-family:'Syne',sans-serif; font-size:clamp(1.6rem,2.1vw,2rem); font-weight:800; line-height:1.2; margin-bottom:2rem;">Up to <span style="color:var(--teal);">99%</span> of checkout time eliminated</p>
+
+      <!-- Traditional row -->
+      <div style="background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:12px; padding:1.3rem 1.5rem; margin-bottom:.6rem;">
+        <p style="font-size:1rem; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.4); font-weight:600; margin-bottom:1rem;">Traditional Checkout</p>
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700;">
+          <span style="background:rgba(245,166,35,0.12); border:1px solid rgba(245,166,35,0.3); border-radius:8px; padding:.4rem .9rem; color:#F5A623; line-height:1.3; text-align:center;">Wait in line<br><span style="font-size:.8em; font-weight:500; color:rgba(255,200,80,0.7);">~3 min</span></span>
+          <span style="color:rgba(255,255,255,0.3); font-size:1.4rem; line-height:1;">+</span>
+          <span style="background:rgba(245,166,35,0.12); border:1px solid rgba(245,166,35,0.3); border-radius:8px; padding:.4rem .9rem; color:#F5A623; line-height:1.3; text-align:center;">Cashier scans<br><span style="font-size:.8em; font-weight:500; color:rgba(255,200,80,0.7);">~2 min</span></span>
+          <span style="color:rgba(255,255,255,0.3); font-size:1.4rem; line-height:1;">+</span>
+          <span style="background:rgba(245,166,35,0.12); border:1px solid rgba(245,166,35,0.3); border-radius:8px; padding:.4rem .9rem; color:#F5A623; line-height:1.3; text-align:center;">Pay &amp; receipt<br><span style="font-size:.8em; font-weight:500; color:rgba(255,200,80,0.7);">~1 min</span></span>
+          <span style="color:rgba(255,255,255,0.3); font-size:1.4rem; line-height:1;">=</span>
+          <span style="background:rgba(245,166,35,0.22); border:1.5px solid #F5A623; border-radius:8px; padding:.4rem 1.1rem; color:#F5A623; font-size:1.3em; font-weight:800;">~6 min</span>
+        </div>
+      </div>
+
+      <div style="text-align:center; font-size:1.4rem; color:var(--teal); line-height:1; margin:.3rem 0;">↓</div>
+
+      <!-- ZeroQueue row -->
+      <div style="background:rgba(0,194,168,0.05); border:1.5px solid rgba(0,194,168,0.35); border-radius:12px; padding:1.3rem 1.5rem;">
+        <p style="font-size:1rem; letter-spacing:2px; text-transform:uppercase; color:var(--teal); font-weight:600; margin-bottom:1rem;">ZeroQueue Full Package</p>
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700;">
+          <span style="background:rgba(0,194,168,0.12); border:1px solid rgba(0,194,168,0.3); border-radius:8px; padding:.4rem .9rem; color:var(--teal); line-height:1.3; text-align:center;">Scan as you shop<br><span style="font-size:.8em; font-weight:500; color:rgba(0,194,168,0.6);">0 min</span></span>
+          <span style="color:rgba(255,255,255,0.3); font-size:1.4rem; line-height:1;">+</span>
+          <span style="background:rgba(0,194,168,0.12); border:1px solid rgba(0,194,168,0.3); border-radius:8px; padding:.4rem .9rem; color:var(--teal); line-height:1.3; text-align:center;">Walk out<br><span style="font-size:.8em; font-weight:500; color:rgba(0,194,168,0.6);">auto-charged</span></span>
+          <span style="color:rgba(255,255,255,0.3); font-size:1.4rem; line-height:1;">=</span>
+          <span style="background:rgba(0,194,168,0.2); border:1.5px solid var(--teal); border-radius:8px; padding:.4rem 1.1rem; color:var(--teal); font-size:1.3em; font-weight:800; box-shadow:0 0 18px rgba(0,194,168,0.28);">~0 sec</span>
+        </div>
+      </div>
+
+      <p style="margin-top:1.5rem; font-size:1.2rem; color:var(--offwhite); line-height:1.65;">Tested at Kornhauser's Club with real shoppers. The checkout step becomes invisible.</p>
+    </div>
+
+    <!-- COST SAVINGS -->
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:3rem; position:relative; overflow:hidden;">
+      <div style="position:absolute; inset:0; background:radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,194,168,0.09), transparent 70%); pointer-events:none;"></div>
+      <p style="font-size:1.1rem; letter-spacing:3px; text-transform:uppercase; color:var(--teal); font-weight:600; margin-bottom:.8rem;">Cost Savings</p>
+      <p style="font-family:'Syne',sans-serif; font-size:clamp(1.6rem,2.1vw,2rem); font-weight:800; line-height:1.2; margin-bottom:2rem;">Replace <span style="color:#F5A623;">$219,000/yr</span> in labor<br>with <span style="color:var(--teal);">$35,988/yr</span> in software</p>
+
+      <!-- Cashiers row -->
+      <div style="background:rgba(245,166,35,0.07); border:1px solid rgba(245,166,35,0.25); border-radius:12px; padding:1.3rem 1.5rem; margin-bottom:.6rem;">
+        <p style="font-size:1rem; letter-spacing:2px; text-transform:uppercase; color:#F5A623; font-weight:600; margin-bottom:1rem;">5 Cashiers — Annual Labor</p>
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700;">
+          <span style="background:rgba(245,166,35,0.1); border:1px solid rgba(245,166,35,0.25); border-radius:8px; padding:.4rem .9rem; color:#F5A623;">5 cashiers</span>
+          <span style="color:rgba(255,255,255,0.3);">×</span>
+          <span style="background:rgba(245,166,35,0.1); border:1px solid rgba(245,166,35,0.25); border-radius:8px; padding:.4rem .9rem; color:#F5A623;">$15/hr</span>
+          <span style="color:rgba(255,255,255,0.3);">×</span>
+          <span style="background:rgba(245,166,35,0.1); border:1px solid rgba(245,166,35,0.25); border-radius:8px; padding:.4rem .9rem; color:#F5A623;">8 hrs/day</span>
+          <span style="color:rgba(255,255,255,0.3);">×</span>
+          <span style="background:rgba(245,166,35,0.1); border:1px solid rgba(245,166,35,0.25); border-radius:8px; padding:.4rem .9rem; color:#F5A623;">365 days</span>
+          <span style="color:rgba(255,255,255,0.3); font-size:1.4rem; line-height:1;">=</span>
+          <span style="background:rgba(245,166,35,0.22); border:1.5px solid #F5A623; border-radius:8px; padding:.4rem 1.1rem; color:#F5A623; font-size:1.3em; font-weight:800;">$219,000</span>
+        </div>
+      </div>
+
+      <div style="display:flex; align-items:center; gap:.8rem; margin:.3rem .3rem;">
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+        <span style="font-family:'Syne',sans-serif; font-size:.95rem; letter-spacing:2px; color:rgba(255,255,255,0.25); font-weight:600; text-transform:uppercase;">vs.</span>
+        <div style="flex:1; height:1px; background:var(--border);"></div>
+      </div>
+
+      <!-- ZeroQueue cost row -->
+      <div style="background:rgba(0,194,168,0.05); border:1.5px solid rgba(0,194,168,0.35); border-radius:12px; padding:1.3rem 1.5rem; margin-bottom:.6rem;">
+        <p style="font-size:1rem; letter-spacing:2px; text-transform:uppercase; color:var(--teal); font-weight:600; margin-bottom:1rem;">ZeroQueue Full Suite</p>
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; font-family:'Syne',sans-serif; font-size:1.15rem; font-weight:700;">
+          <span style="background:rgba(0,194,168,0.12); border:1px solid rgba(0,194,168,0.3); border-radius:8px; padding:.4rem .9rem; color:var(--teal);">$2,999/mo</span>
+          <span style="color:rgba(255,255,255,0.3);">×</span>
+          <span style="background:rgba(0,194,168,0.12); border:1px solid rgba(0,194,168,0.3); border-radius:8px; padding:.4rem .9rem; color:var(--teal);">12 months</span>
+          <span style="color:rgba(255,255,255,0.3); font-size:1.4rem; line-height:1;">=</span>
+          <span style="background:rgba(0,194,168,0.2); border:1.5px solid var(--teal); border-radius:8px; padding:.4rem 1.1rem; color:var(--teal); font-size:1.3em; font-weight:800; box-shadow:0 0 18px rgba(0,194,168,0.28);">$35,988</span>
+        </div>
+      </div>
+
+      <!-- Net savings -->
+      <div style="background:linear-gradient(135deg, rgba(0,194,168,0.12), rgba(0,194,168,0.04)); border:1.5px solid rgba(0,194,168,0.4); border-radius:12px; padding:1.3rem 1.6rem; display:flex; justify-content:space-between; align-items:center; gap:1rem; flex-wrap:wrap;">
+        <span style="font-family:'Syne',sans-serif; font-size:1.25rem; font-weight:700; color:var(--white);">Net Annual Savings</span>
+        <span style="font-family:'Syne',sans-serif; font-size:clamp(2.2rem,3vw,3rem); font-weight:800; color:var(--teal); letter-spacing:-1px; text-shadow:0 0 30px rgba(0,194,168,0.4);">$183,012</span>
+      </div>
+
+      <p style="margin-top:1.5rem; font-size:1.2rem; color:var(--offwhite); line-height:1.65;">For a small grocery store. Savings scale exponentially as store size and traffic grow.</p>
+    </div>
+
+  </div>
+</section>
+
+<div class="teal-rule"></div>
+
 <section id="products">
   <p class="section-eyebrow reveal">Our Products</p>
   <h2 class="section-title reveal">Three products.<br><span>One seamless system.</span></h2>
-  <p class="products-intro reveal">Most stores begin with our app-based system and expand into computer vision and automation over time — each product is designed to build on the last. Stores can adopt any combination — start with one product, add more as you grow. Each module is independent, integrates with your existing setup, and pairs with our hardware partners for best-in-class performance.</p>
-
+  <p class="products-intro reveal">Most stores begin with our app-based system and expand into computer vision and automation over time — each product is designed to build on the last.</p>
   <div class="products-grid reveal">
-
     <div class="product-card">
       <span class="product-num">Product 01</span>
       <span class="product-icon">📷</span>
       <h3>Computer Vision Checkout</h3>
-      <p>AI-powered camera software that tracks every item placed in a cart in real time — at the shelves, in the aisles, and at the exit. Members can be recognized on entry and supported throughout their shopping session. When paired with our app and camera partners, stores can progressively reduce manual scanning and move toward low-interaction checkout.</p>
-      <p class="product-aside">Works with most modern cameras. We recommend our hardware partners for best accuracy. Stores can also choose camera-only entry/exit coverage without full aisle deployment. We partner with select camera manufacturers to offer pre-integrated systems, while still supporting integration with existing in-store hardware.</p>
+      <p>AI-powered camera software that tracks every item placed in a cart in real time — at the shelves, in the aisles, and at the exit. Members can be recognized on entry and supported throughout their shopping session.</p>
+      <p class="product-aside">Works with most modern cameras. We recommend our hardware partners for best accuracy.</p>
       <div class="product-tags">
         <span class="product-tag">In-Aisle CV</span>
         <span class="product-tag">Entry / Exit AI</span>
         <span class="product-tag">Auto Charge</span>
       </div>
     </div>
-
     <div class="product-card">
       <span class="product-num">Product 02</span>
       <span class="product-icon">📱</span>
       <h3>Membership & App System</h3>
-      <p>The customer-facing membership platform. Shoppers register, link a payment method, and use the app to scan items as they shop. The CV system ties their identity to their session — multiple profiles per account are supported and recognized automatically.This is the foundation of the ZeroQueue system — enabling app-based item scanning today while preparing stores for deeper automation over time.</p>
-      <p class="product-aside">Optional hardware add-on: entrance kiosk terminals for customers without smartphones, available through our hardware partners.</p>
+      <p>The customer-facing membership platform. Shoppers register, link a payment method, and use the app to scan items as they shop. The CV system ties their identity to their session.</p>
+      <p class="product-aside">Optional hardware add-on: entrance kiosk terminals for customers without smartphones.</p>
       <div class="product-tags">
         <span class="product-tag">Mobile App</span>
         <span class="product-tag">Multi-Profile</span>
         <span class="product-tag">Card on File</span>
       </div>
     </div>
-
     <div class="product-card">
       <span class="product-num">Product 03</span>
       <span class="product-icon">🛡️</span>
       <h3>Risk & Theft Mitigation AI</h3>
-      <p>Intelligent alert dampening that protects loyal customers from false accusations — which can destroy a business far faster than any theft. The AI cross-references membership history before escalating anything to staff.</p>
-      <p class="product-aside">Unregistered exits receive full scrutiny. Known members are protected. Pursue real theft confidently, without risking the customer relationships that are your biggest asset.</p>
+      <p>Intelligent alert dampening that protects loyal customers from false accusations. The AI cross-references membership history before escalating anything to staff.</p>
+      <p class="product-aside">Unregistered exits receive full scrutiny. Known members are protected.</p>
       <div class="product-tags">
         <span class="product-tag">Alert Dampening</span>
         <span class="product-tag">Trust Scoring</span>
         <span class="product-tag">Loss Prevention</span>
       </div>
     </div>
-
   </div>
 </section>
 
 <div class="teal-rule"></div>
 
-<!-- HOW IT WORKS -->
 <section id="how">
   <p class="section-eyebrow reveal">How It Works</p>
   <h2 class="section-title reveal">Five steps.<br><span>Zero friction.</span></h2>
-
   <div class="steps-row reveal">
     <div class="step">
       <div class="step-num">1</div>
       <h3>Enter & Check In</h3>
-      <p>Open the app or tap the entrance kiosk. Membership and payment verified instantly — you're ready to shop.</p>
+      <p>Open the app or tap the entrance kiosk. Membership and payment verified instantly.</p>
     </div>
     <div class="step">
       <div class="step-num">2</div>
       <h3>Shop Freely</h3>
-      <p>Grab what you need and scan items in the app as you shop. The process is fast, familiar, and already reduces checkout friction.</p>
+      <p>Grab what you need and scan items in the app as you shop.</p>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <h3>AI Supports Your Cart</h3>
-      <p>In-aisle and exit cameras identify every item in real time. The risk AI monitors for genuine anomalies only.</p>
+      <p>In-aisle and exit cameras identify every item in real time. Risk AI monitors for genuine anomalies only.</p>
     </div>
     <div class="step">
       <div class="step-num">4</div>
       <h3>Quick Checkout</h3>
-      <p>Our system can integrate with cameras to assist tracking and reduce errors — building toward more automated checkout over time.</p>
+      <p>Camera integration assists tracking and reduces errors — building toward more automated checkout over time.</p>
     </div>
     <div class="step">
       <div class="step-num">5</div>
       <h3>Receipt on Your Phone</h3>
-      <p>Itemized receipt hits the app instantly. Review, dispute, or reorder with one tap. Completely done.</p>
+      <p>Itemized receipt hits the app instantly. Review, dispute, or reorder with one tap.</p>
     </div>
   </div>
 </section>
 
 <div class="teal-rule"></div>
 
-<!-- PARTNERS -->
 <section id="partners">
   <div class="partner-cols">
     <div class="partner-left reveal">
       <p class="section-eyebrow">Hardware Partnerships</p>
       <h2 class="section-title">We write the software.<br><span>We pick the best hardware.</span></h2>
-      <p>We don’t manufacture cameras — we partner with leading hardware companies to deliver pre-integrated solutions, while still supporting stores that want to use their existing systems.</p>
-      <p>Every partnership is built on mutual cross-promotion: our partners promote ZeroQueue to their retail customers, and we recommend our partners to every store we onboard. No extra marketing spend — everyone grows together.</p>
-      <p class="muted-note">We publish minimum camera spec recommendations for every product tier, so any store understands exactly what hardware their use case requires — and our partners can fulfill it. Our software is designed to integrate with a wide range of camera setups, giving stores flexibility while still offering optimized performance through our preferred partners.</p>
+      <p>We don't manufacture cameras — we partner with leading hardware companies to deliver pre-integrated solutions, while still supporting stores that want to use their existing systems.</p>
+      <p>Every partnership is built on mutual cross-promotion: our partners promote ZeroQueue to their retail customers, and we recommend our partners to every store we onboard.</p>
+      <p class="muted-note">We publish minimum camera spec recommendations for every product tier, so any store understands exactly what hardware their use case requires.</p>
     </div>
     <div class="partner-benefits reveal">
       <div class="partner-benefit">
@@ -617,14 +688,14 @@ footer {
         <span class="partner-benefit-icon">🔧</span>
         <div>
           <strong>Works With Existing Hardware</strong>
-          <p>Already have cameras installed? Our software runs on most modern systems. Upgrade only if your use case demands it.</p>
+          <p>Already have cameras installed? Our software runs on most modern systems.</p>
         </div>
       </div>
       <div class="partner-benefit">
         <span class="partner-benefit-icon">📋</span>
         <div>
           <strong>Published Camera Specs</strong>
-          <p>Transparent spec requirements for every product tier — stores know exactly what they need before spending a dollar on hardware.</p>
+          <p>Transparent spec requirements for every product tier — stores know exactly what they need before spending a dollar.</p>
         </div>
       </div>
     </div>
@@ -633,19 +704,16 @@ footer {
 
 <div class="teal-rule"></div>
 
-<!-- PRICING -->
 <section id="pricing">
   <p class="section-eyebrow reveal">Pricing</p>
   <h2 class="section-title reveal">Modular pricing.<br><span>Pay for what you use.</span></h2>
-
   <div class="pricing-grid reveal">
     <div class="pricing-card">
       <p class="pricing-tier">STARTER</p>
       <h3 class="pricing-name">App + Membership</h3>
-      <p class="pricing-desc">The membership and app system standalone. Get customers enrolled and payments on file — the natural first step before adding CV checkout.</p>
       <p class="pricing-price"><sup>$</sup>499<sub>/mo</sub></p>
-      <p class="pricing-note">Per store location</p>
-      <ul class="pricing-features">
+      <p class="pricing-note" style="font-size:1.3rem;">Per store location · bulk discounts available</p>
+      <ul class="pricing-features" style="font-size:1.25rem !important;">
         <li>Full membership app (iOS + Android)</li>
         <li>Payment on file + check-in flow</li>
         <li>Multi-profile support per account</li>
@@ -655,38 +723,35 @@ footer {
       </ul>
       <a href="#contact" class="pricing-btn pricing-btn-ghost">Get Started</a>
     </div>
-
     <div class="pricing-card featured">
-      <p class="pricing-tier">GROWTH</p>
-      <h3 class="pricing-name">CV Checkout + App</h3>
-      <p class="pricing-desc">The full walk-out checkout experience. Computer vision at entry, aisles, and exit — combined with the membership app. Works with existing cameras or our partner hardware.</p>
-      <p class="pricing-price"><sup>$</sup>1,999<sub>/mo</sub></p>
-      <p class="pricing-note">Per store · hardware not included</p>
-      <ul class="pricing-features">
+      <p class="pricing-tier">COMPLETE</p>
+      <h3 class="pricing-name">Full Suite</h3>
+      <p class="pricing-price"><sup>$</sup>2,999<sub>/mo</sub></p>
+      <p class="pricing-note" style="font-size:1.3rem;">Per store · hardware not included · bulk discounts available</p>
+      <ul class="pricing-features" style="font-size:1.25rem !important;">
         <li>Everything in Starter</li>
-        <li>In-aisle + exit CV checkout software</li>
-        <li>Real-time cart tracking AI</li>
+        <li>Facial recognition — entry &amp; exit identification</li>
+        <li>In-aisle product tracking (computer vision)</li>
+        <li>AI risk mitigation &amp; behavioral analysis</li>
+        <li>Theft detection with trust scoring</li>
         <li>Auto-charge on exit</li>
-        <li>Partner camera spec recommendations</li>
-        <li>Priority support + onboarding</li>
+        <li>Priority support + dedicated onboarding</li>
       </ul>
       <a href="#contact" class="pricing-btn pricing-btn-filled">Request Demo</a>
     </div>
-
     <div class="pricing-card">
-      <p class="pricing-tier">ENTERPRISE</p>
-      <h3 class="pricing-name">Full Suite + Risk AI</h3>
-      <p class="pricing-desc">Every product. CV checkout, membership app, and the full risk mitigation and theft AI layer. Built for multi-location chains and high-traffic stores.</p>
-      <p class="pricing-price" style="font-size:2rem; padding-top:.5rem;">Custom</p>
-      <p class="pricing-note">Volume discounts across all locations</p>
-      <ul class="pricing-features">
-        <li>Everything in Growth</li>
-        <li>Risk & theft mitigation AI</li>
-        <li>Alert dampening for members</li>
-        <li>Trust scoring across locations</li>
-        <li>Dedicated account manager</li>
-        <li>SLA-backed uptime guarantee</li>
-        <li>Custom hardware partner agreements</li>
+      <p class="pricing-tier">MODULAR</p>
+      <h3 class="pricing-name">Build Your Own</h3>
+      <p class="pricing-price" style="font-size:2rem; padding-top:.5rem;">Variable</p>
+      <p class="pricing-note" style="font-size:1.3rem;">Base + add-ons · volume discounts across locations</p>
+      <ul class="pricing-features" style="font-size:1.25rem !important;">
+        <li>App + Membership (base, included)</li>
+        <li>➕ Entry/exit facial identification</li>
+        <li>➕ In-aisle product tracking</li>
+        <li>➕ AI risk mitigation</li>
+        <li>➕ Theft detection layer</li>
+        <li>Bulk discounts for multi-location chains</li>
+        <li>Custom contract &amp; SLA options</li>
       </ul>
       <a href="#contact" class="pricing-btn pricing-btn-ghost">Talk to Sales</a>
     </div>
@@ -695,11 +760,9 @@ footer {
 
 <div class="teal-rule"></div>
 
-<!-- CONTACT -->
 <section id="contact">
   <p class="section-eyebrow reveal">Get in Touch</p>
   <h2 class="section-title reveal">Ready to eliminate<br><span>your checkout line?</span></h2>
-
   <div class="contact-wrap reveal">
     <div class="contact-left">
       <h3>Let's talk about your store.</h3>
@@ -717,7 +780,6 @@ footer {
         <span>Real-world tested at Kornhauser's Club</span>
       </div>
     </div>
-
     <div>
       <form class="contact-form" id="contactForm">
         <div class="form-row">
@@ -753,8 +815,8 @@ footer {
           <select>
             <option value="">Select a product...</option>
             <option>App + Membership only</option>
-            <option>CV Checkout + App</option>
-            <option>Full Suite (all three products)</option>
+            <option>Full Suite</option>
+            <option>Build Your Own (Modular)</option>
             <option>Not sure — want to learn more</option>
           </select>
         </div>
@@ -769,7 +831,6 @@ footer {
   </div>
 </section>
 
-<!-- FOOTER -->
 <footer>
   <div class="footer-logo">Zero<span>Queue</span></div>
   <p class="footer-copy">© 2025 ZeroQueue Inc. All rights reserved.</p>
@@ -783,7 +844,6 @@ footer {
 </footer>
 
 <script>
-  // Cursor
   const arrow = document.getElementById('cursorArrow');
   let mx = 0, my = 0;
   document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
@@ -792,7 +852,6 @@ footer {
     requestAnimationFrame(animCursor);
   })();
 
-  // Scroll reveal with stagger
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
@@ -804,13 +863,11 @@ footer {
     });
   });
 
-  // Nav scroll
   const nav = document.querySelector('nav');
   window.addEventListener('scroll', () => {
     nav.style.background = window.scrollY > 40 ? 'rgba(9,17,31,0.97)' : 'rgba(9,17,31,0.88)';
   });
 
-  // Form submit
   document.getElementById('contactForm').addEventListener('submit', e => {
     e.preventDefault();
     document.getElementById('formSuccess').style.display = 'block';
