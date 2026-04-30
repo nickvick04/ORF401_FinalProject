@@ -82,7 +82,7 @@ struct HomeView: View {
             }
             .navigationBarHidden(true)
             .sheet(isPresented: $showCheckIn) {
-                CheckInView()
+                CheckInView(onStartShopping: { selectedTab = 1 })
             }
         }
     }

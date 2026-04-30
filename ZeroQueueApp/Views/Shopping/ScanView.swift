@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ScanView: View {
     @EnvironmentObject var appState: AppState
+    @Binding var selectedTab: Int
     @State private var showCheckInPrompt = false
     @State private var lastScannedItem: CartItem? = nil
     @State private var showItemFlash = false
@@ -15,6 +16,10 @@ struct ScanView: View {
             } else {
                 noSessionView
             }
+        }
+        .onChange(of: appState.activeSession?.id) { _, _ in
+            lastScannedItem = nil
+            showItemFlash   = false
         }
         .sheet(isPresented: $showCheckInPrompt) {
             CheckInView()
@@ -136,15 +141,13 @@ struct ScanView: View {
                         .foregroundColor(.white)
                 }
                 Spacer()
-                NavigationLink(destination: CartView(selectedTab: .constant(2))) {
-                    Text("View Cart")
-                        .font(.system(size: 14, weight: .bold))
-                        .foregroundColor(.zqNavy)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 12)
-                        .background(Color.zqTeal)
-                        .cornerRadius(30)
-                }
+                Button("View Cart") { selectedTab = 2 }
+                    .font(.system(size: 14, weight: .bold))
+                    .foregroundColor(.zqNavy)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 12)
+                    .background(Color.zqTeal)
+                    .cornerRadius(30)
             }
             .padding(.horizontal, 20)
             .padding(.vertical, 16)

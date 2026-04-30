@@ -4,6 +4,8 @@ struct CheckInView: View {
     @EnvironmentObject var appState: AppState
     @Environment(\.dismiss) var dismiss
 
+    var onStartShopping: (() -> Void)? = nil
+
     @State private var selectedStore: MockStore? = nil
     @State private var isCheckingIn = false
     @State private var didCheckIn   = false
@@ -14,7 +16,10 @@ struct CheckInView: View {
                 Color.zqNavy.ignoresSafeArea()
 
                 if didCheckIn, let store = selectedStore {
-                    CheckInSuccessView(store: store) { dismiss() }
+                    CheckInSuccessView(store: store) {
+                        dismiss()
+                        onStartShopping?()
+                    }
                 } else {
                     storeListView
                 }

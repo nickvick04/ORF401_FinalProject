@@ -9,15 +9,20 @@ struct OnboardingView: View {
             WelcomeScreen(path: $path)
                 .navigationDestination(for: OnboardingStep.self) { step in
                     switch step {
-                    case .signUp:    SignUpScreen(path: $path)
-                    case .payment:   AddPaymentScreen(path: $path)
+                    case .signUp:
+                        SignUpScreen(path: $path)
+                    case .payment(let firstName, let lastName, let email):
+                        AddPaymentScreen(path: $path, firstName: firstName, lastName: lastName, email: email)
                     }
                 }
         }
     }
 }
 
-enum OnboardingStep: Hashable { case signUp, payment }
+enum OnboardingStep: Hashable {
+    case signUp
+    case payment(firstName: String, lastName: String, email: String)
+}
 
 // MARK: - Welcome Screen
 struct WelcomeScreen: View {
@@ -152,7 +157,7 @@ struct SignUpScreen: View {
 
                     Button("Continue") {
                         if isValid {
-                            path.append(OnboardingStep.payment)
+                            path.append(OnboardingStep.payment(firstName: firstName, lastName: lastName, email: email))
                         } else {
                             showError = true
                         }
@@ -171,6 +176,10 @@ struct SignUpScreen: View {
 struct AddPaymentScreen: View {
     @Binding var path: NavigationPath
     @EnvironmentObject var appState: AppState
+
+    let firstName: String
+    let lastName: String
+    let email: String
 
     @State private var cardNumber  = ""
     @State private var expiry      = ""
@@ -244,8 +253,7 @@ struct AddPaymentScreen: View {
                 expiryMonth: 12,
                 expiryYear: 28
             )
-            // Grab name fields from path context — use defaults for demo
-            var user = User(firstName: "Nick", lastName: "Vick", email: "nickvick04@gmail.com")
+            var user = User(firstName: firstName, lastName: lastName, email: email)
             user.paymentMethod = payment
             appState.login(user: user)
         }

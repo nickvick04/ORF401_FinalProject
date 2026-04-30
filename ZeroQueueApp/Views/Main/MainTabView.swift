@@ -13,7 +13,7 @@ struct MainTabView: View {
                 }
                 .tag(0)
 
-            ScanView()
+            ScanView(selectedTab: $selectedTab)
                 .tabItem {
                     Label("Scan", systemImage: "barcode.viewfinder")
                 }
@@ -26,11 +26,17 @@ struct MainTabView: View {
                 .badge(appState.cartItemCount > 0 ? appState.cartItemCount : 0)
                 .tag(2)
 
-            ProfileView()
+            ChatView()
                 .tabItem {
-                    Label("Profile", systemImage: selectedTab == 3 ? "person.fill" : "person")
+                    Label("Assistant", systemImage: selectedTab == 3 ? "sparkles" : "sparkles")
                 }
                 .tag(3)
+
+            ProfileView()
+                .tabItem {
+                    Label("Profile", systemImage: selectedTab == 4 ? "person.fill" : "person")
+                }
+                .tag(4)
         }
         .tint(.zqTeal)
         .onAppear { configureTabBarAppearance() }
