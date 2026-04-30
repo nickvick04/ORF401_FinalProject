@@ -20,6 +20,7 @@ targets:
         excludes:
           - "project.yml"
           - "SETUP.md"
+          - "Secrets.example.txt"
           - "ZeroQueue.xcodeproj/**"
     resources:
       - path: Assets.xcassets

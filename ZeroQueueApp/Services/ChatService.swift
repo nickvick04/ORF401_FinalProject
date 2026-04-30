@@ -6,7 +6,7 @@ class ChatService: ObservableObject {
     private let apiKey = Secrets.groqAPIKey
 
     private let endpoint = URL(string: "https://api.groq.com/openai/v1/chat/completions")!
-    private let model    = "llama3-8b-8192"
+    private let model    = "llama-3.1-8b-instant"
 
     // MARK: - Send message
     func send(
